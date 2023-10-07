@@ -33,6 +33,25 @@ struct YoungTableau
         seq.push_back(res);
         return res;
     }
+    int remove(int s, int t)
+    {
+        int sz = arr.size();
+        // check corner
+        assert(s < sz && t == arr[s].size() - 1);
+        if (s < sz - 1)
+            assert(arr[s + 1].size() <= t);
+        int x = arr[s][t];
+        arr[s].pop_back();
+        if (arr[s].size() == 0)
+            arr.pop_back();
+        for (int i = s - 1; i >= 0; i--)
+        {
+            int ix = upper_bound(arr[i].begin(), arr[i].end(), x) - arr[i].begin();
+            ix--;
+            swap(arr[i][ix], x);
+        }
+        return x;
+    }
     void print()
     {
         for (auto i : arr)
@@ -47,9 +66,7 @@ struct YoungTableau
         int sz = arr.size();
         vector<vector<int>> brr(sz);
         for (int i = 0; i < sz; i++)
-        {
             brr[i].resize(arr[i].size());
-        }
         for (int i = 0; i < seq.size(); i++)
         {
             auto [x, y] = seq[i];
